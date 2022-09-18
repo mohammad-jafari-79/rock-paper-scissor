@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rock paper scissors</title>
+  </head>
+  <style>
+    form label span {
+      font-weight: 600;
+    }
+    #count {
+      display: inline-block;
+    }
+
+    #count p {
+      display: inline-block;
+    }
+    #count #computer {
+      margin-left: 2rem;
+    }
+    #compchoice {
+      margin-left: 2rem;
+      display: inline-block;
+    }
+    #compchoice span {
+      font-weight: 600;
+    }
+    #timer {
+      color: green;
+      float: right;
+      margin-right: 4rem;
+    }
+  </style>
+  <body>
+    <form id="form1" name="form1">
+      <label for="choice"
+        ><span>type one of this into the input box:</span> "rock", "paper",
+        "scissors"</label
+      >
+      <br /><br />
+      <input type="text" name="choice" id="choice" />
+      <p id="compchoice">
+        computer choice is: <span id="computerchoice"></span>
+      </p>
+      <br /><br />
+      <input id="play" type="button" value="play" />
+      <br /><br />
+      <button id="reset_btn">reset</button>
+    </form>
+    <hr />
+    <br />
+    <div id="count">
+      <p id="you">you : 0</p>
+      <p id="computer">computer : 0</p>
+    </div>
+    <br /><br />
+    <h3 id="mresult"></h3>
+    <h2 id="result"></h2>
+    <h2 id="countdown"></h2>
+  </body>
+  <script>
+    document.getElementById("play").addEventListener("click", play);
+    document
+      .getElementById("reset_btn")
+      .addEventListener("click", window.location.reload);
+    var person_win_counter;
+    var computer_win_counter;
+    var i = 0;
+    var total_person_win_count;
+    var total_computer_win_count;
+    var person_win_list = [];
+    var computer_win_list = [];
+    function play() {
+      computer_win_counter = 0;
+      person_win_counter = 0;
+      var personChoice = document.forms["form1"]["choice"].value;
+      personChoice = personChoice.toUpperCase();
+      var result = document.getElementById("result");
+      var math_result = document.getElementById("mresult");
+      var you = document.getElementById("you");
+      var computer = document.getElementById("computer");
+      if (
+        personChoice === "ROCK" ||
+        personChoice === "PAPER" ||
+        personChoice === "SCISSORS"
+      ) {
+        let choiceArray = ["rock", "paper", "scissors"];
+        let computerChoice = Math.floor(Math.random() * 3) + 1;
+        if (computerChoice === 1) {
+          computerChoice = "ROCK";
+          document.getElementById("computerchoice").innerHTML = "rock";
+        } else if (computerChoice === 2) {
+          computerChoice = "PAPER";
+          document.getElementById("computerchoice").innerHTML = "paper";
+        } else {
+          computerChoice = "SCISSORS";
+          document.getElementById("computerchoice").innerHTML = "scissors";
+        }
+        //                                 game rules
+        if (computerChoice === "ROCK" && personChoice === "PAPER") {
+          person_win_counter++;
+          person_win_list[i] = person_win_counter;
+          computer_win_list[i] = computer_win_counter;
+          i++;
+        } else if (computerChoice === "SCISSORS" && personChoice === "PAPER") {
+          computer_win_counter++;
+          person_win_list[i] = person_win_counter;
+          computer_win_list[i] = computer_win_counter;
+          i++;
+        } else if (computerChoice === "SCISSORS" && personChoice === "ROCK") {
+          person_win_counter++;
+          person_win_list[i] = person_win_counter;
+          computer_win_list[i] = computer_win_counter;
+          i++;
+        } else if (computerChoice === "PAPER" && personChoice === "ROCK") {
+          computer_win_counter++;
+          person_win_list[i] = person_win_counter;
+          computer_win_list[i] = computer_win_counter;
+          i++;
+        } else if (computerChoice === "ROCK" && personChoice === "SCISSORS") {
+          computer_win_counter++;
+          person_win_list[i] = person_win_counter;
+          computer_win_list[i] = computer_win_counter;
+          i++;
+        } else if (computerChoice === "PAPER" && personChoice === "SCISSORS") {
+          person_win_counter++;
+          person_win_list[i] = person_win_counter;
+          computer_win_list[i] = computer_win_counter;
+          i++;
+        } else {
+          computer_win_list[i] = computer_win_counter;
+          person_win_list[i] = person_win_counter;
+          i++;
+        }
+        total_person_win_count = 0;
+        total_computer_win_count = 0;
+        for (let j = 0; j < i; j++) {
+          total_person_win_count += person_win_list[j];
+          total_computer_win_count += computer_win_list[j];
+        }
+        //                 License     and         result
+
+        if (
+          Math.abs(total_computer_win_count - total_person_win_count) == 2 ||
+          Math.abs(total_computer_win_count - total_person_win_count) == 3
+        ) {
+          if (total_computer_win_count > total_person_win_count) {
+            results();
+            document.getElementById("result").innerHTML = "you lose";
+            document.getElementById("result").style.color = "red";
+            timer();
+          } else if (total_person_win_count > total_computer_win_count) {
+            results();
+            document.getElementById("result").innerHTML = "you win";
+            document.getElementById("result").style.color = "green";
+            timer();
+          }
+        } else {
+          results();
+        }
+      } else {
+        result.innerHTML =
+          "please enter one of the said value and befor that press reset button";
+      }
+      function results() {
+        if (computer_win_counter > person_win_counter) {
+          computer.innerHTML = "computer : " + total_computer_win_count;
+        } else if (computer_win_counter < person_win_counter) {
+          you.innerHTML = "you : " + total_person_win_count;
+        } else if (person_win_counter == computer_win_counter) {
+          math_result.innerHTML += "this match is tie" + "<br>";
+        }
+      }
+      function timer() {
+        let timeleft = 10;
+        let gameTimer = setInterval(function () {
+          if (timeleft <= 0) {
+            clearInterval(gameTimer);
+            location.reload();
+          } else {
+            document.getElementById("countdown").innerHTML =
+              "the game will be reset in : " + timeleft;
+          }
+          if (timeleft <= 5)
+            document.getElementById("countdown").style.color = "#e74c3c";
+          timeleft--;
+        }, 1000);
+      }
+    }
+  </script>
+</html>
